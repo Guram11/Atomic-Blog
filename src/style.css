@@ -176,3 +176,14 @@ aside li button {
   padding: 4px 8px;
   font-size: 14px;
 }
+
+.list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.btn {
+  margin-right: 20px;
+}

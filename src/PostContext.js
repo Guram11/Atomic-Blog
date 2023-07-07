@@ -9,13 +9,24 @@ function createRandomPost() {
   };
 }
 
+const DUMMY_POSTS = [
+  {
+    title: "Wireless Hard Drive",
+    body: "If we parse the microchip, we can get to the SMS solid state HTTP panel!",
+    id: 1,
+  },
+  {
+    title: "Bluetooth Protocol",
+    body: "Use the solid state IP bus, then you can quantify the 1080p transmitter!",
+    id: 2,
+  },
+];
+
 // 1) CREATE A NEW CONTEXT
 const PostContext = createContext();
 
 function PostProvider({ children }) {
-  const [posts, setPosts] = useState(() =>
-    Array.from({ length: 30 }, () => createRandomPost())
-  );
+  const [posts, setPosts] = useState(DUMMY_POSTS);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Derived state. These are the posts that will actually be displayed
@@ -27,6 +38,20 @@ function PostProvider({ children }) {
             .includes(searchQuery.toLowerCase())
         )
       : posts;
+
+  const archivedPosts = posts.filter((post) => post.archived);
+
+  function handleTogglePost(id) {
+    setPosts((posts) =>
+      posts.map((post) =>
+        post.id === id ? { ...post, archived: !post.archived } : post
+      )
+    );
+  }
+
+  function handleDeletePost(id) {
+    setPosts((posts) => posts.filter((post) => post.id !== id));
+  }
 
   function handleAddPost(post) {
     setPosts((posts) => [post, ...posts]);
@@ -40,8 +65,11 @@ function PostProvider({ children }) {
     <PostContext.Provider
       value={{
         posts: searchedPosts,
+        archivedPosts,
+        onMoveToArchive: handleTogglePost,
         onClearPosts: handleClearPosts,
         onAddPost: handleAddPost,
+        onDeletePost: handleDeletePost,
         searchQuery,
         setSearchQuery,
       }}
